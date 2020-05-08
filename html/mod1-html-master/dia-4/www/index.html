@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Formularios</title>
+</head>
+
+<body>
+  <header>
+    <h1>Formularios</h1>
+  </header>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+    </ul>
+  </nav>
+  <form action="formularios.html" method="get">
+    <fieldset>
+      <legend>Datos personales</legend>
+      <ul>
+        <li>
+          <label>
+            Nombre
+            <input type="text" autofocus name="nombre" placeholder="Escribe Aquí..." />
+          </label>
+        </li>
+        <li>
+          <label>
+            Correo
+            <input type="email" name="correo" required placeholder="Escribe Aquí..." />
+          </label>
+        </li>
+        <li>
+          <label>
+            Contraseña
+            <input type="password" name="contraseña" placeholder="Escribe Aquí..." />
+          </label>
+        </li>
+        <li>
+          <label>
+            Fecha de Nacimiento
+            <input type="date" name="fecha" placeholder="Escribe Aquí..." />
+          </label>
+        </li>
+        <li>
+          <label>
+            Foto
+            <input type="file" name="foto" />
+          </label>
+        </li>
+        <li>
+          <label>
+            Comentario
+            <textarea name="comentario" rows="5" cols="50" placeholder="Escribe tu comentario" ></textarea>
+          </label>
+        </li>
+      </ul>
+    </fieldset>
+    <fieldset>
+      <legend>Estudios e intereses</legend>
+      <p>Estudios</p>
+      <ul>
+        <li>
+          <label>
+            E.S.O
+            <input type="radio" name="estudios" value="eso" checked="checked"/>
+          </label>
+        </li>
+        <li>
+          <label>
+            F.P
+            <input type="radio" name="estudios" value="fp" />
+          </label>
+        </li>
+        <li>
+          <label>
+            Universitarios
+            <input type="radio" name="estudios" value="uni" />
+          </label>
+        </li>
+      </ul>
+      <p>Intereses</p>
+      <ul>
+        <li>
+          <label>
+            Cine
+            <input type="checkbox" name="cine"/>
+          </label>
+        </li>
+        <li>
+          <label>
+            Deportes
+            <input type="checkbox" name="deportes"/>
+          </label>
+        </li>
+        <li>
+          <label>
+            Música
+            <input type="checkbox" name="musica"/>
+          </label>
+        </li>
+      </ul>
+    </fieldset>
+
+    <fieldset>
+      <legend>Datos sobre la revista</legend>
+      <select name="frecuencia">
+        <option>semanal</option>
+        <option>quincenal</option>
+        <option>mensual</option>
+        <option>bimensual</option>
+      </select>
+    </fieldset>
+    <button type="submit">Enviar</button>
+    <button type="reset">Borrar</button>
+  </form>
+
+</body>
+
+</html>

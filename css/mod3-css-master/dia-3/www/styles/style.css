@@ -1,0 +1,51 @@
+@import 'normalize.css';
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+@font-face {
+    font-family: 'Oswald-Bold';
+    src: url('/fonts/Oswald-Bold.eot?#iefix') format('embedded-opentype'),  url('/fonts/Oswald-Bold.woff') format('woff'), url('/fonts/Oswald-Bold.ttf')  format('truetype'), url('/fonts/Oswald-Bold.svg#Oswald-Bold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+body {
+    font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
+
+p {
+    padding: 5%;
+    border: 1px solid blue;
+}
+
+h1 {
+    font-size: 2.13em;
+    color: deeppink;
+    font-family: 'Oswald-Bold', 'Roboto', Arial, Helvetica, sans-serif;
+}
+
+section > p:last-child {
+    background-color: rgba(32, 213, 97, 0.4);
+}
+
+p.importante {
+    font-size: 150%;
+    border-color: red;
+}
+p span {
+    text-transform: uppercase;
+    font-style: italic;
+    text-decoration: line-through;
+}
+
+h1 {
+    text-shadow: 0 0 20px red;
+    text-align: center;
+    letter-spacing: -1px;
+    word-spacing: 0.5em;
+}
+
+p:not(.importante):last-child {
+    line-height: 2;
+}
+

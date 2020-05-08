@@ -1,0 +1,73 @@
+@import 'normalize.css';
+/* @import url('print.css') print; */
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: whitesmoke;
+}
+
+.center {
+    background-color: azure;
+    display: flex;
+    border: 1px solid silver;
+    max-width: 768px;
+    border-radius: 4px ;
+    box-shadow: 0 0 10px silver;
+}
+
+main, aside {
+    padding: 40px;
+}
+
+aside {
+    background-color: blanchedalmond;
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+aside a {
+    display: block;
+    padding: 10px;
+}
+nav {
+    display: flex;
+    flex-direction: column;
+}
+@media screen and (max-width: 768px) {
+    body {
+        display: block;
+    }
+    .center {
+        flex-direction: column;
+    }
+    #logo {
+        order: -1;
+    }
+    nav {
+        text-align: center;
+    }
+    aside {
+        order: -1
+    }
+    main, aside {
+        height: auto;
+    }
+}
+
+/* @media print {
+    body {
+        background-color: white;
+        color: red;
+        padding: 90px;
+    }
+} */
+
+/* @media not print {
+    h1 {
+        font-size: 10px;
+    }
+} */
+

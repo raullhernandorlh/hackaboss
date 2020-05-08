@@ -1,0 +1,61 @@
+p {
+  color: black;
+}
+section {
+  padding: 20px;
+}
+.item-list {
+  color: purple;
+  font-family: sans-serif;
+}
+.red {
+  color: orangered;
+}
+.small {
+  font-size: 10px;
+}
+.big {
+  font-size: 20px;
+}
+#intro {
+  background-image: url('/images/landscape.jpg');
+  background-size: cover;
+  height: 200px;
+}
+#ocio {
+  background: #ddd;
+}
+#desarrollo {
+  background: #02ac66;
+}
+[lang=lat]{
+  color: #02ac66;
+}
+
+[data-author="Tu"]{
+  color: orangered;
+}
+
+/* selecciona todos los elementos cuyo atributo contenga la "palabra"  */
+[data-etiquetas~="oferta"]{
+  background-color: gray;
+  border: 1px solid blue;
+}
+
+/* selecciona todos los elementos cuyo atributo contenga la cadena de texto puede ser un trozo de palabra  */
+[data-etiquetas*="des"]{
+  background-color: #02ac66;
+  border: 1px solid red;
+}
+
+/* selecciona todos los elementos cuyo atributo empiece por */
+[data-etiquetas^="des"]{
+  background-color: blanchedalmond;
+  border: 1px solid red;
+}
+
+/* selecciona todos los elementos cuyo atributo acabe por */
+[data-etiquetas$="ta"]{
+  background-color: red;
+  color: white;
+}

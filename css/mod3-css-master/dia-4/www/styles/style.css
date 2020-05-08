@@ -1,0 +1,23 @@
+@import 'normalize.css';
+
+.caja {
+    margin: auto;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 30px;
+    padding: 100px;
+    border-radius: 50%;
+    box-shadow: 0px 0px 13px pink;
+}
+
+#caja-2 {
+    background-color: violet;
+    background-image: url('/images/elephant.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 200px;
+    max-width: 700px;
+    width: 100%;
+}
+

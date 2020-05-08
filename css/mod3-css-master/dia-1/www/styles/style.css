@@ -1,0 +1,13 @@
+@import 'normalize.css';
+/*
+* {
+    padding: 10px;
+}
+*/
+h1 {
+    color: yellow;
+    background: pink;
+}
+p {
+    color: blue;
+}

@@ -1,0 +1,68 @@
+@import "normalize.css";
+
+section {
+    position: relative;
+    background-color: plum;
+    padding: 50px;
+}
+.caja {
+    padding: 120px;
+    display: inline-block;
+}
+
+#caja-1 {
+    background-color: aquamarine;
+    transform: translate(50%, -50%);
+}
+
+#caja-2 {
+    background-color: pink;
+    transform: scaleY(0.5);
+}
+
+#caja-3 {
+    background-color: cadetblue;
+    transform: rotate(60deg);
+}
+
+#caja-4 {
+    background-color: crimson;
+    transform: scale(1) rotate(60deg);
+    opacity: 0.85;
+    /* transition-property: all;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-in-out; */
+    transition: all .2s ease-in-out;
+}
+
+#caja-4:hover {
+    transform: scale(1.2) rotate(0deg);
+    cursor: pointer;
+    opacity: 1;
+}
+
+#caja-5 {
+    background-color: orangered;
+    animation: 3s ease-in-out forwards;
+}
+
+#caja-5:hover {
+    animation-name: slide;
+}
+
+@keyframes slide {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    45% {
+        transform: rotate(90deg);
+    }
+    55% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+}

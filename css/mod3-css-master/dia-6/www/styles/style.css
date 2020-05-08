@@ -1,0 +1,41 @@
+@import 'normalize.css';
+
+section > div {
+  padding: 50px;
+}
+.flex-container {
+    background-color: silver;
+    display: flex;
+    flex-direction: row-reverse;
+}
+.flex-item {
+    background-color: coral;
+    padding: 90px;
+    margin: 1px;
+}
+#flex-item-2 {
+    padding: 100px;
+    background-color: greenyellow;
+}
+
+.container {
+    background-color: aquamarine;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.item {
+    padding: 90px;
+    margin: 5px;
+    background-color: coral;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: auto;
+
+    flex: 0 0 10%;
+
+}
+#item-3 {
+    align-self: flex-start;
+    order: 1;
+}
