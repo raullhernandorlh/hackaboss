@@ -1,6 +1,8 @@
 const csvtojson = require('csvtojson');
 const axios = require('axios');
 
+
+
 // IIFE
 (async () => {
 
@@ -20,4 +22,3 @@ const axios = require('axios');
 
     console.log(filteredBeaches.length);
 })(); // <= SE LLAMA A SÍ MISMA
-
