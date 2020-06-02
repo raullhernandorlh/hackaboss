@@ -5,6 +5,8 @@ const express = require('express');
 const axiosCacheAdapter = require('axios-cache-adapter');
 const winston = require('winston');
 
+const poiManager = require('storage_memory.js')
+
 const app = express();
 
 let globalId = 0;
@@ -95,14 +97,8 @@ async function getJSONFromNetwork(url, delimiter) {
 
 //let collections = ['theater', 'beaches', 'council'];
 
-let collection = {
-  'theater': [],
-  'beaches': [],
-  'council': []
-}
-
 app.get('/poi', (req, res) => {
-  res.json( Object.keys(collection) );
+  res.json( poiManager.getListNames() );
 })
 
 app.post('/poi', (req, res) => {
@@ -113,19 +109,21 @@ app.post('/poi', (req, res) => {
     return;
   }
 
-  if (collection[collectionName.toLowerCase()] !== undefined) {
+  try {
+    poiManager.createList(collectionName);
+    res.send();
+  } catch (e) {
+    // simplificación: asume un único tipo de error
     res.status(409).send();
-    return;
+    return
   }
 
-  collection[collectionName.toLowerCase()] = [];
-
-  res.send();
 })
 
 
 app.post('/poi/:collection', (req, res) => {
   let collectionName = req.params.collection.toLowerCase();
+  let id;
 
   // comprobar si intentan añadir un elemento a una colección de las que están
   // fuera de nuestro control, que son las que gestiona la Xunta (banderas azules, ayuntamientos y 
@@ -134,50 +132,25 @@ app.post('/poi/:collection', (req, res) => {
   if (['beaches', 'council', 'theater'].indexOf(collectionName) !== -1 ) {
     res.status(403).send();
     return; 
-  }  
-
-  if (collection[collectionName] === undefined) {
-    res.status(404).send();
-    return;
   }
 
-
-  if (req.body.coordenadas === undefined ||
-    req.body.concello === undefined ||
-    req.body.provincia === undefined ||
-    req.body.web === undefined) {
+  try {
+    id = poiManager.addPointOfInterest(collectionName, req.body);
+  } catch (e) {
+    if (e.message === 'missing-data') {
       res.status(400).send();
+      return;
+    } else if (e.message === 'unknown-list') {
+      res.status(404).send();
+      return; 
+    } else if (e.message === 'already-exists') {
+      res.status(409).send();
       return;
     }
 
-  const isEqual = (item) => {
-    // ...
-    // return (true|false) 
-    // TODO!!!
-    return false
   }
 
-  // comprobar si el nuevo elemento ya existía
-  const equalElements = collection[collectionName].filter( isEqual );
-  if (equalElements.length !== 0) {
-    res.status(409).send();
-    return;
-  }
-
-  let data = {
-    id: globalId++,
-    concello: req.body.concello,
-    coordenadas: req.body.coordenadas,
-    web: req.body.web,
-    provincia: req.body.provincia,
-     datos: {
-       nome: req.body.nome
-     }
-  }
-
-  collection[collectionName].push(data);
-
-  res.json({id: data.id});
+  res.json({id: id});
 });
 
 app.delete('/poi/:collection/:id', (req, res) => {
@@ -187,17 +160,14 @@ app.delete('/poi/:collection/:id', (req, res) => {
   // viene como cadena
   const id = parseInt(req.params.id);
 
-  if (collection[collectionName] === undefined) {
-    res.status(404).send();
-    return;
+  try {
+    poiManager.deletePointOfInterest(collectionName, id);
+  } catch(e) {
+    if ((e.message === 'unknown-list') || (e.message === 'unknown-point')) {
+      res.status(404).send();
+      return
+    }
   }
-
-  if (collection[collectionName].find(item => item.id === id) === undefined) {
-    res.status(404).send();
-    return;
-  }
-
-  collection[collectionName] = collection[collectionName].filter( item => item.id !== id);
 
   res.send();
 });
@@ -385,9 +355,3 @@ logger.info(`Running server in port ${port}`);
 
 
 app.listen(port);
-
-
-
-
-
-
