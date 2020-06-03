@@ -1,18 +1,21 @@
+require('dotenv').config()
+
 const axios = require('axios');
 const bodyParser = require('body-parser');
+const config = require('config');
 const csvtojson = require('csvtojson');
 const express = require('express');
 const axiosCacheAdapter = require('axios-cache-adapter');
 const winston = require('winston');
 
-const poiManager = require('storage_memory.js')
+const poiManager = require('./storage_memory.js')
 
 const app = express();
 
 let globalId = 0;
 
 const logger = winston.createLogger({
-  level: 'info',
+  level: 'debug',
   format: winston.format.json(),
   defaultMeta: { service: 'user-service' },
   transports: [
@@ -66,12 +69,6 @@ const cachedAxios = axios.create({
   adapter: cache.adapter
 })
 
-const urls = {
-  '2017': 'https://abertos.xunta.gal/catalogo/cultura-ocio-deporte/-/dataset/0380/praias-galegas-con-bandeira-azul-2017/001/descarga-directa-ficheiro.csv',
-  '2018': 'https://abertos.xunta.gal/catalogo/cultura-ocio-deporte/-/dataset/0392/praias-galegas-con-bandeira-azul-2018/001/descarga-directa-ficheiro.csv',
-  '2019': 'https://abertos.xunta.gal/catalogo/cultura-ocio-deporte/-/dataset/0401/praias-galegas-con-bandeira-azul-2019/001/descarga-directa-ficheiro.csv',
-}
-
 const urlTheater = 'https://abertos.xunta.gal/catalogo/cultura-ocio-deporte/-/dataset/0305/teatros-auditorios/001/descarga-directa-ficheiro.csv';
 const urlCouncil = 'https://abertos.xunta.gal/catalogo/administracion-publica/-/dataset/0301/casas-dos-concellos-galicia/102/acceso-aos-datos.csv';
 
@@ -102,15 +99,15 @@ app.get('/poi', (req, res) => {
 })
 
 app.post('/poi', (req, res) => {
-  const collectionName = req.body.name;
+  const { name } = req.body;
 
-  if (collectionName === undefined) {
+  if (name === undefined) {
     res.status(400).send();
     return;
   }
 
   try {
-    poiManager.createList(collectionName);
+    poiManager.createList(name);
     res.send();
   } catch (e) {
     // simplificación: asume un único tipo de error
@@ -119,7 +116,6 @@ app.post('/poi', (req, res) => {
   }
 
 })
-
 
 app.post('/poi/:collection', (req, res) => {
   let collectionName = req.params.collection.toLowerCase();
@@ -173,11 +169,14 @@ app.delete('/poi/:collection/:id', (req, res) => {
 });
 
 app.put('/poi/:collection/:id', (req, res) => {
-  const collectionName = req.params.collection;
+  //const collectionName = req.params.collection;
 
   // OJO!!! cuando generamos el ID era un número entero, pero en la URL
   // viene como cadena
-  const id = parseInt(req.params.id);
+  //const id = parseInt(req.params.id);
+
+  let { collection, id} = req.params;
+  id = parseInt(id);
 
   if (collection[collectionName] === undefined) {
     res.status(404).send();
@@ -313,7 +312,8 @@ app.get('/poi/beaches', async (req, res) => {
   // ?year=2019&state=15
   // ?year=2019
   let listOfBeaches;
-  const year = parseInt(req.query['year']);
+
+  const year = req.query['year'];
   const state = req.query['state'];
 
   if (isNaN(year)) {
@@ -321,16 +321,18 @@ app.get('/poi/beaches', async (req, res) => {
     return;
   }
 
-  if (urls[year] === undefined) {
-    res.status(404).send();
-    return;
-  }
-
   try {
-    listOfBeaches = await getJSONFromNetwork(urls[year], ';');
+    listOfBeaches = await getJSONFromNetwork(config.get(year), ';');
   } catch(e) {
-    res.status(500).send();
-    return;
+
+    if (e.message.startsWith('Configuration')) {
+      res.status(404).send();
+      return;
+    } else {
+      res.status(500).send();
+      return;
+    }
+
   }
 
   if (state !== undefined) {
@@ -349,9 +351,9 @@ app.get('/poi/:collection', (req, res) => {
   res.json(collection[collectionName]);
 });
 
-const port = 8000;
+const port = process.env.PORT;
 
 logger.info(`Running server in port ${port}`);
 
-
 app.listen(port);
+
