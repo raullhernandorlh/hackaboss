@@ -356,4 +356,3 @@ const port = process.env.PORT;
 logger.info(`Running server in port ${port}`);
 
 app.listen(port);
-

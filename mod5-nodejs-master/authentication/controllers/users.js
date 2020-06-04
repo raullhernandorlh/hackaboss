@@ -1,7 +1,10 @@
 const bcrypt = require('bcrypt');
-const jwt = require('jwt');
+const jwt = require('jsonwebtoken');
 
-const register = (req, res) => {
+// just for academic purpose until database module is ready
+const bd = require('./bd_mock');
+
+const register = async (req, res) => {
     // coger datos del body (email, password)
     const { email, password } = req.body;
 
@@ -12,31 +15,38 @@ const register = (req, res) => {
     }
 
     // comprobar si ya existe un existe un usuario con este email
-    // TODO
+    if (bd.getUser(email)) {
+        res.status(409).send();
+        return;
+    }
 
     // encriptar la password (para no almacenarla en texto claro)
     // bcrypt.hash(<password en claro (ej.: 1234)>, <número de "rounds">)
     //    rounds = 3
     //         hash(hash(hash(password)))
-    const passwordBcrypt = bcrypt.hash(password, 10);
+    const passwordBcrypt = await bcrypt.hash(password, 10);
 
     // almacenamos (email, passwordBcrypt)
-    // TODO
+    bd.saveUser(email, passwordBcrypt);
 
     res.send();
 }
 
-const login = (req, res) => {
+const login = async (req, res) => {
     const { email, password } = req.body;
 
     // buscar email en la bbdd
     // nos devolverá un JSON para el usuario con un ID, un role, y su password
+    const user = bd.getUser(email);
 
-    // si no existe email, error
+    if (!user) {
+        res.status(404).send();
+        return;
+    }
 
     // comprobar la password (ojo! con bcrypt)
     // error si no matchean
-    const passwordIsvalid = bcrypt.compare(password, user.password);
+    const passwordIsvalid = await bcrypt.compare(password, user.password);
 
     if (!passwordIsvalid) {
         res.status(401).send();
