@@ -1,0 +1,7 @@
+usuarios (#id, dni, nombre, apellidos, email, telefono, fecha_nacimiento, contrasena)
+reservas (#id, fecha_reserva, fecha_uso, precio, -id_pista, -id_usuario)
+polideportivos (#id, nombre, direccion, extension)
+pistas (#id. codigo, tipo, operativa, precio, fecha_ultima_reserva, -id_polideportivo)
+usuario_reserva (#id, -id_usuario, -id_reserva, rating)
+hobbies (#id, -id_usuario, hobby)
+usuario_usuario (#id, -id_usuario_emisor, -id_usuario_receptor)

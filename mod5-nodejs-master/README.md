@@ -23,19 +23,20 @@ En este proyecto desarrollamos el backend de un sistema que permite al usuario i
 
 El desarrollo de este proyecto lo realizamos de manera incremental: al mismo tiempo que añadimos funcionalidades aprendemos nuevos conceptos/técnicas de `NodeJS` y de `ExpressJS`.
 
+
 Qué hemos aprendido
-==================
+===================
 A continuación se enumera lo que hemos aprendido en este curso. Usadlo como referencia y buscar la información detallada en la presentación y en el código desarrollado.
 
 * **Versionado**: aprendimos `semantic versioning` como método para versionar las librerías. Se trata del mecanismo usado por `npm` para indicar qué versión de los paquetes debe descargarse.
 
-* **package.json y package-lock.json**: estudiamos cómo gestiona `NodeJS` las versiones de los paquetes gracias a estos dos ficheros. 
+* **Gestión de dependencias**: estudiamos cómo gestiona `NodeJS` las versiones de los paquetes gracias a los ficheros `package.json` y `package-lock.json`. 
 
 * **Patrón petición-respuesta**: el cliente envía un mensaje `http` y el servidor responderá con una respuesta que incluirá un contenido y un código, `status code`.
 
 * **API REST**: los servidores ofrecerán una API, esto es, una definición de cómo acceder a su funcionalidad, de manera que los clientes no tienen que saber los detalles de implementación del servidor, tan solo la definición de su API. En una API REST se modela el sistema en base a una serie de recursos que podemos listar, crear, modificar o eliminar. Estas acciones se corresponden con los métodos REST más usados: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`
 
-* **Middlewares de ExpressJS**. Funciones de callback que se ejecutan en cada endpoint (sin necesidad de añadir código a los endpoints). Lo usamos para CORS, para logging, y veremos que se usan también para cuestiones de autenticación. 
+* **Middlewares de ExpressJS**. Funciones de callback que se ejecutan en cada endpoint (sin necesidad de añadir código a los endpoints). Lo usamos para CORS, para logging, y para autenticación y autorización. Pueden afectar a todos los endpoints, si los declaramos con `app.use` o cada endpoint de manera individual. Para esto último haremos, por ejemplo, `app.get(\ruta, middleware1, middleware2, controller).`. Notad que puede haber un número indefinido de middlewares antes que el controllador del endpoint.
 
 * **CORS**. Mecanismo de seguridad que impide a una página web realizar una petición REST desde Javascript a un servidor distinto al suyo propio (desde una página en www.midominio.com no podemos realizar una petición a www.otrodominio.es). En `expressjs` solucionamos esto con un middleware.
 
@@ -47,10 +48,18 @@ A continuación se enumera lo que hemos aprendido en este curso. Usadlo como ref
 
 * **Configuración**. Aprendimos a usar variables de entorno desde el código (con `process.env`) y a gestionarlas de manera sencilla desde un fichero `.env` con el paquete `dotenv`. Estudiamos también otros mecanismos de configuración, como por ejemplo, usar `json` distintos para producción y desarrollo, con el paquete `config`.
 
+* **Autenticación y autorización**. Estudiamos cómo estos dos procesos forman parte de la seguridad de una API REST. La `autenticación` es el mecanismo mediante el cual un usuario se identifica ante el sistema; mientras que la `autorización` es el proceso que permite o deniega el acceso a un recurso, una vez que el usuario ya está autenticado. ¿Qué cambios nos hicieron falta en nuestras APIs REST para introducir estos mecanismos?
+
+    * Añadir un `endpoint` para el *registro*. En este paso el servidor registra nuestra identidad. Recordad que las claves no se pueden almacenar en claro, sino que se deben `hashear`, lo cual haremos con `bcrypt`.
+    * Añadir un `endpoint` para el *login*. En esta etapa el usuario envía sus credenciales al servidor y este comprueba que se corresponden con las registradas. Si la comprobación es correcta, el servidor generará un `token`. Para ello emplearemos `jwt`, que nos permite cifrar un objeto dentro del token.
+    * En las llamadas a los endpoints de la API, el cliente deberá enviar también el `token` obtenido en el login. ¿Dónde se envía? Como `cabecera http`, en concreto será la cabecera `authorization`. En el servidor también es preciso realizar un pequeño cambio: antes de procesar el controlador del endpoint, debemos validar el token. Para ello desarrollamos un middleware que llamará a la función `verify` de `jsonwebtoken`, y en caso de error generará el error `http` correspondiente.
+
+* **Despliegue**. Hemos explorado brevemente cómo funciona el despliegue de aplicaciones. Para ello hablamos del `continuous deployment`, esto es, las técnicas para enlacer el desarrollo con el despliegue y lo concretamos con `heroku`, `netlify` y comentamos, muy por encima, `jenkins`. Estas herramientas se *enganchan* a nuestro repositorio y detectan cuándo hacemos un *push*, un *commit* o la acción que definamos. A partir de ahí desencadenan los pasos que hayamos definido en el `pipeline`, como pueden ser la instalación, ejecución de pruebas y copia de los ficheros generados en la máquina de producción. Recordad que es necesario indicar en el `package.json` cómo se arranca la aplicación, para lo añadimos en la sección `scripts` el comando de arranque.
+
 Entregables
 ===========
 Enunciados de los ejercicios entregables semanales:
 
 * **Semana 1**: Cálculo de cuota mensual de un préstamo. El objetivo del ejercicio es aprender a buscar librerías en `npmjs` y usarlas correctamente desde nuestra aplicación.
 * **Semana 2**: Gestión de eventos. El objetivo es entender qué es una `API REST` e implementar un endpoint `GET` y otro `POST`. 
-* **Semana 3**:
+* **Semana 3**: Tienda online. El objetivo es implementar un sistema con autenticación.

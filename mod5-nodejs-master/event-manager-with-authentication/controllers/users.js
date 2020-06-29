@@ -27,7 +27,7 @@ const register = async (req, res) => {
     const passwordBcrypt = await bcrypt.hash(password, 10);
 
     // almacenamos (email, passwordBcrypt)
-    bd.saveUser(email, passwordBcrypt);
+    bd.saveUser(email, passwordBcrypt, 'normal');
 
     res.send();
 }
@@ -53,7 +53,12 @@ const login = async (req, res) => {
         return;
     }
 
-    const tokenPayload = { id: user.id, role: user.role };
+    const tokenPayload = { 
+        id: user.id, 
+        role: user.role,
+        email: user.email
+    };
+
     const token = jwt.sign(tokenPayload, process.env.SECRET, {
         expiresIn: '1d'
     });
